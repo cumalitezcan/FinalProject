@@ -15,6 +15,7 @@ namespace DataAccess.Concrete.EntityFramework
         {
             using (NorthwindContext context = new NorthwindContext())
             {
+                
                 var addedEntity = context.Entry(entity);//referansı yakalama
                 addedEntity.State = EntityState.Added;
                 context.SaveChanges();
