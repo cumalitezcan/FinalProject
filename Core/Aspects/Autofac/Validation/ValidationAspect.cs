@@ -9,11 +9,12 @@ using System.Text;
 
 namespace Core.Aspects.Autofac.Validation
 {
-    public class ValidationAspect : MethodInterception
+    public class ValidationAspect : MethodInterception //Aspect
     {
         private Type _validatorType;
         public ValidationAspect(Type validatorType)
         {
+            //defensive coding
             if (!typeof(IValidator).IsAssignableFrom(validatorType))
             {
                 throw new System.Exception("Bu bir doğrulama sınıfı değil");
@@ -23,8 +24,13 @@ namespace Core.Aspects.Autofac.Validation
         }
         protected override void OnBefore(IInvocation invocation)
         {
+            //Çalışma anında instance oluşturmak için...
             var validator = (IValidator)Activator.CreateInstance(_validatorType);
+
+            //Generic argümanların 0.sının tipini yakala demek.
             var entityType = _validatorType.BaseType.GetGenericArguments()[0];
+
+            //Method'un argümanlarını gez. Eğer benim Type'ime eşit ise onları validate et.
             var entities = invocation.Arguments.Where(t => t.GetType() == entityType);
             foreach (var entity in entities)
             {
